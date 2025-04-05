@@ -6,18 +6,19 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        poppins: ['Poppins', 'serif'],
-        'poppins-bold': ['Outfit-Bold'],
-        'poppins-extrabold': ['Poppins-ExtraBold', 'serif'],
-        'poppins-extralight': ['Poppins-ExtraLight', 'serif'],
-        'poppins-light': ['Poppins-Light', 'serif'],
-        'poppins-medium': ['Poppins-Medium', 'serif'],
-        'poppins-regular': ['Poppins-Regular', 'serif'],
-        'poppins-semibold': ['Poppins-SemiBold', 'serif'],
-        'poppins-thin': ['Poppins-Thin', 'serif'],
+        poppins: ['Poppins-Black'],
+        'poppins-bold': ['Poppins-Bold', 'sans-serif'],
+        'poppins-extrabold': ['Poppins-ExtraBold', 'sans-serif'],
+        'poppins-extralight': ['Poppins-ExtraLight', 'sans-serif'],
+        'poppins-light': ['Poppins-Light', 'sans-serif'],
+        'poppins-medium': ['Poppins-Medium', 'sans-serif'],
+        'poppins-regular': ['Poppins-Regular', 'sans-serif'],
+        'poppins-semibold': ['Poppins-SemiBold', 'sans-serif'],
+        'poppins-thin': ['Poppins-Thin', 'sans-serif'],
       },
       colors: {
         primary: '#12A08A',
+        secondary: '#F3F5F6',
       },
     },
   },

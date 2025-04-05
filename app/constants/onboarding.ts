@@ -1,5 +1,12 @@
 
-export const onboards = [
+export interface OnboardingItem {
+    id: number;
+    image: any;
+    title: string;
+    text: string;
+  }
+
+export const onboards:OnboardingItem[] = [
     {
         id:1,
         image:require('../../assets/images/onboardOne.png'),

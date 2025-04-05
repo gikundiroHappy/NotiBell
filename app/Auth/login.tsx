@@ -1,20 +1,19 @@
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
-  Image,
   TouchableOpacity,
+  Image,
+  SafeAreaView,
   ScrollView,
 } from 'react-native';
-import React, { useContext, useState } from 'react';
 import CustomInput from '../components/customInput';
-import Button from '../components/button';
 import { router } from 'expo-router';
+import Button from '../components/button';
 import { Context } from '../Context/context';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 
-const register = () => {
-  const [username, setUsername] = useState('');
+const LoginScreen = ({}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,30 +23,27 @@ const register = () => {
 
   const context = useContext(Context);
 
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  if (!context) {
+    throw new Error('Context must be used within a Provider');
+  }
+
+  const { Login, error } = context;
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
-  const handleValidation = () => {
+  const validateForm = () => {
     let valid = true;
-    if (email.trim() === '') {
+
+    if (email.trim() == '') {
       setEmailError('Email is required');
       valid = false;
-    } else if (!isValidEmail(email)) {
-      setEmailError('Your email is not valid');
-      valid = false;
-      // showMessage({
-      //   message: 'Invalid Email',
-      //   description: 'Please enter a valid email address.',
-      //   type: 'warning',
-      //   icon: 'warning',
-      //   position: 'top',
-      // });
     } else {
       setEmailError('');
     }
-    if (password.trim() === '') {
+
+    if (password.trim() == '') {
       setPasswordError('Password is required');
       valid = false;
     } else {
@@ -56,16 +52,10 @@ const register = () => {
     return valid;
   };
 
-  if (!context) {
-    throw new Error('Context must be used within a Provider');
-  }
-
-  const { Register, error } = context;
-
-  const handleRegister = async () => {
-    if (handleValidation()) {
+  const handleLogin = async () => {
+    if (validateForm()) {
       setLoading(true);
-      const success = await Register(email, password, username);
+      const success = await Login(email, password);
 
       if (success) {
         showMessage({
@@ -74,7 +64,7 @@ const register = () => {
           icon: 'success',
           duration: 3000,
         });
-        router.replace('/Auth/login');
+        router.replace('/(root)/(tabs)');
       } else {
         setLoading(false);
         showMessage({
@@ -88,8 +78,8 @@ const register = () => {
     }
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
+  const handleForgotPassword = () => {
+    console.log('Forgot password pressed');
   };
 
   return (
@@ -105,17 +95,8 @@ const register = () => {
           </View>
 
           <Text className="text-primary font-poppins-bold text-2xl py-8">
-            Register
+            Log In
           </Text>
-
-          <CustomInput
-            label="Username"
-            value={username}
-            onChangeText={setUsername}
-            icon2="account-outline"
-            secureTextEntry={false}
-            keyboardType="default"
-          />
 
           <CustomInput
             label="Email"
@@ -149,21 +130,39 @@ const register = () => {
             </Text>
           ) : null}
 
-          <View className="pt-10">
-            <Button
-              title="Register"
-              loading={loading}
-              onPress={handleRegister}
-            ></Button>
+          <View className="flex flex-row justify-between items-center mt-10">
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text className="text-gray-700 text-sm font-poppins-semibold">
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
+
+            <View className="w-56">
+              <Button title="Log in" loading={loading} onPress={handleLogin} />
+            </View>
           </View>
 
-          <View className="flex-row justify-center mt-20">
+          <View className="flex-row items-center my-8">
+            <View className="flex-1 h-px bg-gray-300"></View>
+            <Text className="mx-4 text-sm font-poppins-regular ">
+              or login with
+            </Text>
+            <View className="flex-1 h-px bg-gray-300"></View>
+          </View>
+
+          <View className="flex-row justify-center">
+            <TouchableOpacity className="w-10 h-10 mx-2 items-center justify-center bg-white rounded-full mb-6">
+              <Image source={require('../../assets/images/google.png')} />
+            </TouchableOpacity>
+          </View>
+
+          <View className="flex-row justify-center">
             <Text className="text-gray-700 text-sm font-poppins-regular">
               Already have an account?{' '}
             </Text>
-            <TouchableOpacity onPress={() => router.navigate('/Auth/login')}>
+            <TouchableOpacity onPress={() => router.navigate('/Auth/register')}>
               <Text className="text-primary text-sm font-poppins-bold">
-                Login
+                Register
               </Text>
             </TouchableOpacity>
           </View>
@@ -173,4 +172,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default LoginScreen;
