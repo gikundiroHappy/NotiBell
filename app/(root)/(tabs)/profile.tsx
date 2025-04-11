@@ -29,7 +29,7 @@ const EditProfile = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white flex-1">
       <View className="bg-[#12A08A] h-52">
         <Text className="text-lg text-white text-center font-poppins-semibold py-10">
           Profile
