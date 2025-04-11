@@ -138,7 +138,7 @@ const Onboarding = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="bg-[#12A08A] py-3 rounded-lg justify-center items-center w-[47%]"
+          className="bg-[#1AB69D] py-3 rounded-lg justify-center items-center w-[47%]"
           onPress={handleNext}
         >
           <Text className="text-base font-medium text-white">Next</Text>

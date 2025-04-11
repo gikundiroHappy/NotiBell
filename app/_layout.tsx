@@ -23,6 +23,18 @@ export default function RootLayout() {
     <ContextProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="pages/chatDetail"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="(root)/(tabs)/profile"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="(root)/(tabs)/chat"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </ContextProvider>
   );
