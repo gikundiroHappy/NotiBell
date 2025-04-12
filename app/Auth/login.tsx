@@ -83,10 +83,10 @@ const LoginScreen = ({}) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <FlashMessage position="top" />
-        <View className="bg-secondary h-full p-6 flex flex-col justify-center">
+        <View className="bg-secondary dark:bg-bgdark flex-1 p-6 flex flex-col justify-center">
           <View className="flex flex-row justify-center">
             <Image
               source={require('../../assets/images/login-register.png')}
@@ -132,7 +132,7 @@ const LoginScreen = ({}) => {
 
           <View className="flex flex-row justify-between items-center mt-10">
             <TouchableOpacity onPress={handleForgotPassword}>
-              <Text className="text-gray-700 text-sm font-poppins-semibold">
+              <Text className="text-gray-700 text-sm font-poppins-semibold dark:text-textdark">
                 Forgot Password?
               </Text>
             </TouchableOpacity>
@@ -144,7 +144,7 @@ const LoginScreen = ({}) => {
 
           <View className="flex-row items-center my-8">
             <View className="flex-1 h-px bg-gray-300"></View>
-            <Text className="mx-4 text-sm font-poppins-regular ">
+            <Text className="mx-4 text-sm font-poppins-regular dark:text-textdark">
               or login with
             </Text>
             <View className="flex-1 h-px bg-gray-300"></View>
@@ -157,7 +157,7 @@ const LoginScreen = ({}) => {
           </View>
 
           <View className="flex-row justify-center">
-            <Text className="text-gray-700 text-sm font-poppins-regular">
+            <Text className="text-gray-700 text-sm font-poppins-regular dark:text-textdark">
               Already have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.navigate('/Auth/register')}>

@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // NOTE: Update this to include the paths to all of your component files.
+  darkMode: 'class',
   content: ['./app/**/*.{js,jsx,ts,tsx}', './components/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
@@ -19,6 +19,10 @@ module.exports = {
       colors: {
         primary: '#12A08A',
         secondary: '#F3F5F6',
+        bgdark: '#10141E',
+        bgnavy: '#161D2F',
+        textdark: '#EAEAEA',
+        borderdark: '#5A698F',
       },
     },
   },

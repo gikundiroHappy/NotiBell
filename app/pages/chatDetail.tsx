@@ -65,8 +65,8 @@ const ChatDetail = () => {
 
   if (!chat) {
     return (
-      <SafeAreaView className="flex-1 bg-white justify-center items-center">
-        <Text className="text-lg font-poppins-medium text-gray-800">
+      <SafeAreaView className="flex-1 bg-white dark:bg-bgdark justify-center items-center">
+        <Text className="text-lg font-poppins-medium text-gray-800 dark:text-textdark">
           Chat not found
         </Text>
         <TouchableOpacity
@@ -80,20 +80,20 @@ const ChatDetail = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white dark:bg-bgdark">
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
-      <View className="px-4 py-4 flex-row items-center border-b border-gray-100">
+      <View className="px-4 py-4 flex-row items-center border-b border-gray-100 dark:border-borderdark">
         <TouchableOpacity onPress={() => router.back()} className="mr-4">
           <Ionicons name="arrow-back" size={24} color="#12A08A" />
         </TouchableOpacity>
-        <Text className="text-lg font-poppins-semibold text-gray-800">
+        <Text className="text-lg font-poppins-semibold text-gray-800 dark:text-textdark">
           Gate Doorbell
         </Text>
       </View>
 
-      <View className="items-center py-2 bg-gray-50">
-        <Text className="text-xs font-poppins-regular text-gray-500">
+      <View className="items-center py-2 bg-gray-50 dark:bg-borderdark">
+        <Text className="text-xs font-poppins-regular text-gray-500 dark:text-textdark">
           {new Date(chat.time).toLocaleString()}
         </Text>
       </View>
@@ -110,12 +110,14 @@ const ChatDetail = () => {
               className={`p-4 rounded-xl ${
                 msg.sender === 'user'
                   ? 'bg-[#12A08A] rounded-tr-none'
-                  : 'bg-[#EBEDEE] rounded-tl-none'
+                  : 'bg-[#EBEDEE] dark:bg-bgnavy rounded-tl-none'
               }`}
             >
               <Text
                 className={`font-poppins-regular ${
-                  msg.sender === 'user' ? 'text-white' : 'text-gray-800'
+                  msg.sender === 'user'
+                    ? 'text-white'
+                    : 'text-gray-800 dark:text-textdark'
                 }`}
               >
                 {msg.text}
@@ -132,13 +134,13 @@ const ChatDetail = () => {
 
         {messages.length <= 1 && (
           <View className="mt-6">
-            <Text className="text-sm font-poppins-medium text-gray-500 mb-3">
+            <Text className="text-sm font-poppins-medium text-gray-500 dark:text-borderdark mb-3">
               Quick Responses
             </Text>
             {quickMessages.map((quickMsg, index) => (
               <TouchableOpacity
                 key={index}
-                className="bg-gray-50 border border-gray-200 rounded-xl p-3 mb-3"
+                className="bg-gray-50 dark:bg-bgnavy border border-gray-200 dark:border-borderdark rounded-xl p-3 mb-3"
                 onPress={() => {
                   const newMsg = {
                     id: messages.length + 1,
@@ -149,7 +151,7 @@ const ChatDetail = () => {
                   setMessages([...messages, newMsg]);
                 }}
               >
-                <Text className="text-gray-800 font-poppins-regular">
+                <Text className="text-gray-800 dark:text-textdark font-poppins-regular">
                   {quickMsg}
                 </Text>
               </TouchableOpacity>
@@ -162,9 +164,9 @@ const ChatDetail = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={100}
       >
-        <View className="flex-row items-center px-4 py-3 bg-white border-t border-gray-200">
+        <View className="flex-row items-center px-4 py-3 bg-white dark:bg-bgdark border-t border-gray-200 dark:border-borderdark">
           <TextInput
-            className="flex-1 px-4 py-2 mr-2"
+            className="flex-1 px-4 py-2 mr-2 dark:text-textdark"
             placeholder="Type a message..."
             placeholderTextColor="#999"
             value={message}
@@ -175,7 +177,9 @@ const ChatDetail = () => {
             onPress={handleSend}
             disabled={message.trim() === ''}
             className={`w-10 h-10 rounded-full items-center justify-center ${
-              message.trim() === '' ? 'bg-gray-200' : 'bg-[#12A08A]'
+              message.trim() === ''
+                ? 'bg-gray-200 dark:bg-bgnavy'
+                : 'bg-[#12A08A]'
             }`}
           >
             <Ionicons

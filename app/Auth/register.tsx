@@ -93,10 +93,10 @@ const register = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <FlashMessage position="top" />
-        <View className="bg-secondary h-full p-6 flex flex-col justify-center">
+        <View className="bg-secondary dark:bg-bgdark flex-1 h-full p-6 flex flex-col justify-center">
           <View className="flex flex-row justify-center">
             <Image
               source={require('../../assets/images/login-register.png')}
@@ -158,7 +158,7 @@ const register = () => {
           </View>
 
           <View className="flex-row justify-center mt-20">
-            <Text className="text-gray-700 text-sm font-poppins-regular">
+            <Text className="text-gray-700 text-sm font-poppins-regular dark:text-textdark">
               Already have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => router.navigate('/Auth/login')}>

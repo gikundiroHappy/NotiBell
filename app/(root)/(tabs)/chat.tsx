@@ -50,19 +50,19 @@ const Chat = () => {
   const NotificationItem = ({ item }: { item: chatData }) => (
     <TouchableOpacity
       key={item.id}
-      className="bg-white rounded-xl shadow-sm border border-gray-100 mb-3 overflow-hidden"
+      className="bg-white dark:bg-bgnavy rounded-xl shadow-sm border border-gray-100 dark:border-borderdark mb-3 overflow-hidden"
       onPress={() => goToChat(item)}
     >
       <View className="p-4 flex-row items-center">
-        <View className="bg-gray-100 h-10 w-10 rounded-full items-center justify-center mr-3">
+        <View className="bg-gray-100 dark:bg-bgdark h-10 w-10 rounded-full items-center justify-center mr-3">
           <MaterialIcons name="doorbell" size={20} color="#12A08A" />
         </View>
         <View className="flex-1">
           <View className="flex-row items-center justify-between">
-            <Text className="font-poppins-medium text-gray-800">
+            <Text className="font-poppins-medium text-gray-800 dark:text-textdark">
               Gate Doorbell
             </Text>
-            <Text className="text-xs text-gray-500">
+            <Text className="text-xs text-gray-500 dark:text-textdark">
               {formatTime(new Date(item.time))}
             </Text>
           </View>
@@ -74,8 +74,8 @@ const Chat = () => {
           <View className="ml-2 h-3 w-3 rounded-full bg-[#12A08A]" />
         )}
       </View>
-      <View className="bg-gray-50 px-4 py-2">
-        <Text className="text-xs font-poppins-regular text-gray-500">
+      <View className="bg-gray-50 dark:bg-borderdark px-4 py-2">
+        <Text className="text-xs font-poppins-regular text-gray-500 dark:text-textdark">
           {formatDate(new Date(item.time))}
         </Text>
       </View>
@@ -85,7 +85,7 @@ const Chat = () => {
   const EmptyNotifications = () => (
     <View className="p-8 items-center my-6 mx-4">
       <MaterialIcons name="notifications-none" size={48} color="#12A08A" />
-      <Text className="text-gray-500 text-center mt-4 font-poppins-medium">
+      <Text className="text-gray-500 text-center mt-4 font-poppins-medium dark:text-textdark">
         No doorbell activity
       </Text>
       <Text className="text-gray-400 text-center mt-2 font-poppins-regular">
@@ -95,12 +95,12 @@ const Chat = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white dark:bg-bgdark">
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
-      <View className="px-4 py-4 flex-row justify-between items-center border-b border-gray-100">
+      <View className="px-4 py-4 flex-row justify-between items-center border-b border-gray-100 dark:border-borderdark">
         <View className="flex-1">
-          <Text className="text-lg font-poppins-semibold text-center text-gray-800">
+          <Text className="text-lg font-poppins-semibold text-center text-gray-800 dark:text-textdark">
             Visitor Notifications
           </Text>
         </View>
@@ -111,7 +111,7 @@ const Chat = () => {
           <View className="px-4 py-6">
             {todayChats.length > 0 && (
               <View className="mt-2">
-                <Text className="font-poppins-medium text-gray-800 mb-3">
+                <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
                   Today's Doorbell
                 </Text>
                 {todayChats.map((chat) => (
@@ -122,7 +122,7 @@ const Chat = () => {
 
             {thisWeekChats.length > 0 && (
               <View className="mt-6">
-                <Text className="font-poppins-medium text-gray-800 mb-3">
+                <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
                   This Week's Doorbell
                 </Text>
                 {thisWeekChats.map((chat) => (
@@ -133,7 +133,7 @@ const Chat = () => {
 
             {earlierChats.length > 0 && (
               <View className="mt-6 mb-10">
-                <Text className="font-poppins-medium text-gray-800 mb-3">
+                <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
                   Earlier Doorbell Activity
                 </Text>
                 {earlierChats.map((chat) => (
