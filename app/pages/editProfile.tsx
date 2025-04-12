@@ -42,12 +42,6 @@ const EditProfile = () => {
 
     try {
       setLoading(true);
-      // const user = FIREBASE_AUTH.currentUser;
-
-      // if (!user) {
-      //   Alert.alert('Error', 'User not authenticated');
-      //   return;
-      // }
 
       const userUID = await getItemAsync('userUID');
 
@@ -84,7 +78,7 @@ const EditProfile = () => {
 
   return (
     <SafeAreaView>
-      <View className="bg-secondary h-full">
+      <View className="bg-secondary dark:bg-bgdark h-full">
         <View className="bg-[#12A08A] h-52">
           <View className=" flex flex-row items-center gap-32 px-6">
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -106,12 +100,14 @@ const EditProfile = () => {
                 className="w-28 h-28 rounded-full"
               />
             </View>
-            <Text className="font-poppins-regular text-center text-xs my-2">
+            <Text className="font-poppins-regular text-center text-xs my-2 dark:text-textdark">
               Change picture
             </Text>
 
             <View className="px-8 py-12">
-              <Text className="font-poppins-regular text-sm">Username</Text>
+              <Text className="font-poppins-regular text-sm dark:text-textdark">
+                Username
+              </Text>
               <CustomInput
                 label=""
                 value={username}

@@ -17,7 +17,7 @@ const EditProfile = () => {
     throw new Error('Context must be used within a Provider');
   }
 
-  const { logout, userData } = context;
+  const { logout, userData, changeMode, darkMode } = context;
 
   const HandleLogout = async () => {
     try {
@@ -29,8 +29,8 @@ const EditProfile = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white flex-1">
-      <View className="bg-[#12A08A] h-52">
+    <SafeAreaView className="bg-white dark:bg-bgdark  flex-1">
+      <View className="bg-[#12A08A] dark:bg-bgnavy h-52">
         <Text className="text-lg text-white text-center font-poppins-semibold py-10">
           Profile
         </Text>
@@ -47,10 +47,10 @@ const EditProfile = () => {
             />
           </View>
 
-          <Text className="font-poppins-semibold text-[#3D405B] text-center mt-4 mb-1">
+          <Text className="font-poppins-semibold text-[#3D405B] dark:text-[#B0B0B0] text-center mt-4 mb-1">
             {userData?.fullname || 'User'}
           </Text>
-          <Text className="text-[#3D405B] text-center text-sm">
+          <Text className="text-[#3D405B] dark:text-[#B0B0B0] text-center text-sm">
             {userData?.email || 'email@example.com'}
           </Text>
           <TouchableOpacity
@@ -64,10 +64,19 @@ const EditProfile = () => {
         </View>
 
         <View className="mt-28 mx-8">
-          <View className="flex flex-row gap-4">
-            <Feather name="moon" size={20} />
-            <Text className="font-poppins-medium">Darkmode</Text>
-          </View>
+          <TouchableOpacity
+            className="flex flex-row gap-4"
+            onPress={() => changeMode()}
+          >
+            {darkMode ? (
+              <Feather name="moon" size={20} style={{ color: 'white' }} />
+            ) : (
+              <Feather name="sun" size={20} />
+            )}
+            <Text className="font-poppins-medium dark:text-textdark">
+              Darkmode
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             className="flex flex-row gap-4 mt-4"

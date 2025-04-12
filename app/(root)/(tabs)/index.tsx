@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,19 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { chatsList } from '@/app/constants/chat';
 import { formatDate, formatTime } from '@/app/Utils/dateUtils';
 import { router } from 'expo-router';
+import { Context } from '@/app/Context/context';
 
 const Index = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [doorbellStatus, setDoorbellStatus] = useState('active');
+
+  const context = useContext(Context);
+
+  if (!context) {
+    throw new Error('Context must be used within a Provider');
+  }
+
+  const { darkMode } = context;
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -33,23 +42,27 @@ const Index = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white dark:bg-bgdark">
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
-      <View className="px-4 py-4 flex-row justify-between items-center border-b border-gray-100">
+      <View className="px-4 py-4 flex-row justify-between items-center border-b border-gray-100 dark:border-borderdark">
         <View>
-          <Text className="text-lg font-poppins-semibold text-gray-800">
+          <Text className="text-lg font-poppins-semibold text-gray-800 dark:text-textdark">
             Welcome Home
           </Text>
-          <Text className="text-sm font-poppins-regular text-gray-500">
+          <Text className="text-sm font-poppins-regular text-gray-500 dark:text-textdark">
             Monitor your doorbell activity
           </Text>
         </View>
         <TouchableOpacity
-          className="h-10 w-10 bg-gray-100 rounded-full items-center justify-center"
+          className="h-10 w-10 bg-gray-100 dark:bg-bgnavy rounded-full items-center justify-center"
           onPress={() => router.navigate('/(root)/(tabs)/profile')}
         >
-          <Ionicons name="person-outline" size={20} color="#12A08A" />
+          <Ionicons
+            name="person-outline"
+            size={20}
+            color={darkMode ? '#FFFFFF' : '#12A08A'}
+          />
         </TouchableOpacity>
       </View>
 
@@ -63,7 +76,7 @@ const Index = () => {
           />
         }
       >
-        <View className="mx-4 mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <View className="mx-4 mt-6 bg-white dark:bg-bgnavy rounded-xl shadow-sm border border-gray-100 dark:border-borderdark overflow-hidden">
           <View className="px-4 py-4 flex-row items-center justify-between">
             <View className="flex-row items-center">
               <View
@@ -71,7 +84,7 @@ const Index = () => {
                   doorbellStatus === 'active' ? 'bg-green-600' : 'bg-red-500'
                 }`}
               />
-              <Text className="ml-2 font-poppins-medium text-gray-800">
+              <Text className="ml-2 font-poppins-medium text-gray-800 dark:text-textdark">
                 Doorbell System{' '}
                 {doorbellStatus === 'active' ? 'Active' : 'Inactive'}
               </Text>
@@ -79,15 +92,15 @@ const Index = () => {
             <MaterialIcons name="doorbell" size={24} color="#12A08A" />
           </View>
 
-          <View className="bg-gray-50 px-4 py-3">
-            <Text className="text-xs font-poppins-regular text-gray-500">
+          <View className="bg-gray-50 dark:bg-borderdark px-4 py-3">
+            <Text className="text-xs font-poppins-regular text-gray-500 dark:text-white">
               Last checked: {new Date().toLocaleTimeString()}
             </Text>
           </View>
         </View>
 
         <View className="mx-4 mt-6">
-          <Text className="font-poppins-medium text-gray-800 mb-3">
+          <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
             Quick Actions
           </Text>
           <View className="flex-row justify-between">
@@ -101,9 +114,9 @@ const Index = () => {
               </Text>
             </View>
 
-            <View className="bg-gray-100 py-4 px-4 rounded-xl flex-1 shadow-sm">
+            <View className="bg-gray-100 dark:bg-bgnavy py-4 px-4 rounded-xl flex-1 shadow-sm">
               <Ionicons name="chatbubble-outline" size={24} color="#12A08A" />
-              <Text className="text-gray-800 font-poppins-medium mt-2">
+              <Text className="text-gray-800 dark:text-textdark font-poppins-medium mt-2">
                 Respond
               </Text>
               <Text className="text-gray-500 text-xs mt-1">
@@ -115,7 +128,7 @@ const Index = () => {
 
         <View className="mx-4 mt-6">
           <View className="flex-row justify-between items-center mb-3">
-            <Text className="font-poppins-medium text-gray-800">
+            <Text className="font-poppins-medium text-gray-800 dark:text-textdark">
               Recent Activity
             </Text>
             <TouchableOpacity onPress={goToNotifications}>
@@ -136,11 +149,11 @@ const Index = () => {
               .map((item) => (
                 <TouchableOpacity
                   key={item.id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-100 mb-3 overflow-hidden"
+                  className="bg-white dark:bg-bgnavy rounded-xl shadow-sm border border-gray-100 dark:border-borderdark mb-3 overflow-hidden"
                   onPress={() => goToChat(String(item.id))}
                 >
                   <View className="p-4 flex-row items-center">
-                    <View className="bg-gray-100 h-10 w-10 rounded-full items-center justify-center mr-3">
+                    <View className="bg-gray-100 dark:bg-bgdark h-10 w-10 rounded-full items-center justify-center mr-3">
                       <MaterialIcons
                         name="doorbell"
                         size={20}
@@ -149,7 +162,7 @@ const Index = () => {
                     </View>
                     <View className="flex-1">
                       <View className="flex-row items-center justify-between">
-                        <Text className="font-poppins-medium text-gray-800">
+                        <Text className="font-poppins-medium text-gray-800 dark:text-textdark">
                           Gate Doorbell
                         </Text>
                         <Text className="text-xs text-gray-500">
@@ -164,21 +177,21 @@ const Index = () => {
                       <View className="ml-2 h-3 w-3 rounded-full bg-[#12A08A]" />
                     )}
                   </View>
-                  <View className="bg-gray-50 px-4 py-2">
-                    <Text className="text-xs font-poppins-regular text-gray-500">
+                  <View className="bg-gray-50 dark:bg-borderdark px-4 py-2">
+                    <Text className="text-xs font-poppins-regular text-gray-500 dark:text-textdark">
                       {formatDate(new Date(item.time))}
                     </Text>
                   </View>
                 </TouchableOpacity>
               ))
           ) : (
-            <View className="bg-gray-50 rounded-xl p-6 items-center">
+            <View className="bg-gray-50 dark:bg-bgdark rounded-xl p-6 items-center">
               <MaterialIcons
                 name="notifications-none"
                 size={40}
-                color="#12A08A"
+                color={darkMode ? '#FFFFFF' : '#12A08A'}
               />
-              <Text className="text-gray-500 text-center mt-2 font-poppins-regular">
+              <Text className="text-gray-500 dark:text-textdark text-center mt-2 font-poppins-regular">
                 No recent doorbell activity
               </Text>
             </View>
@@ -186,13 +199,13 @@ const Index = () => {
         </View>
 
         <View className="mx-4 mt-6 mb-28">
-          <Text className="font-poppins-medium text-gray-800 mb-3">
+          <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
             System Status
           </Text>
-          <View className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <View className="bg-white dark:bg-bgnavy rounded-xl shadow-sm border border-gray-100 dark: dark:border-borderdark overflow-hidden">
             <View className="p-4">
               <View className="flex-row justify-between items-center mb-3">
-                <Text className="font-poppins-regular text-gray-800">
+                <Text className="font-poppins-regular text-gray-800 dark:text-textdark">
                   Battery Level
                 </Text>
                 <View className="flex-row items-center">
@@ -207,7 +220,7 @@ const Index = () => {
                 </View>
               </View>
               <View className="flex-row justify-between items-center mb-3">
-                <Text className="font-poppins-regular text-gray-800">
+                <Text className="font-poppins-regular text-gray-800 dark:text-textdark">
                   WiFi Connection
                 </Text>
                 <View className="flex-row items-center">
@@ -218,7 +231,7 @@ const Index = () => {
                 </View>
               </View>
               <View className="flex-row justify-between items-center">
-                <Text className="font-poppins-regular text-gray-800">
+                <Text className="font-poppins-regular text-gray-800 dark:text-textdark">
                   Notifications
                 </Text>
                 <View className="flex-row items-center">

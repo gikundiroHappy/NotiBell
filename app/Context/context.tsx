@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { deleteItemAsync, setItemAsync, getItemAsync } from 'expo-secure-store';
+import { useColorScheme } from 'nativewind';
 
 interface UserData {
   email: string;
@@ -22,9 +23,11 @@ interface ContextType {
   Login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   updateUserData: (newData: UserData) => void;
+  changeMode: () => Promise<void>;
   error: string;
   isLoggedIn: boolean;
   userData: UserData | null;
+  darkMode: boolean;
 }
 
 export const Context = createContext<ContextType | undefined>(undefined);
@@ -37,6 +40,8 @@ export const ContextProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [darkMode, setDarkMode] = useState(false);
+  const { setColorScheme } = useColorScheme();
 
   const fetchCurrentUserData = async () => {
     try {
@@ -65,7 +70,22 @@ export const ContextProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const changeMode = async () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    await setItemAsync('darkMode', JSON.stringify(newMode));
+    setColorScheme(newMode ? 'dark' : 'light');
+  };
+
+  const savedMode = async () => {
+    const stored = await getItemAsync('darkMode');
+    const isDark = stored === 'true';
+    setDarkMode(isDark);
+    setColorScheme(isDark ? 'dark' : 'light');
+  };
+
   useEffect(() => {
+    savedMode();
     isLogged();
   }, []);
 
@@ -137,6 +157,8 @@ export const ContextProvider: React.FC<AuthProviderProps> = ({ children }) => {
         error,
         isLoggedIn,
         userData,
+        changeMode,
+        darkMode,
       }}
     >
       {children}

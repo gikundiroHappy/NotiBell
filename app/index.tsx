@@ -74,7 +74,7 @@ const Onboarding = () => {
         <Text className="text-2xl font-poppins-semibold text-[#1AB69D] text-center mb-4">
           {item.title}
         </Text>
-        <Text className="text-base text-[#333333] text-center leading-6 font-poppins-regular">
+        <Text className="text-base text-[#333333] dark:text-textdark text-center leading-6 font-poppins-regular">
           {item.text}
         </Text>
       </View>
@@ -97,11 +97,11 @@ const Onboarding = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white dark:bg-bgdark">
       <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
 
       <TouchableOpacity className="self-end px-4 py-2" onPress={handleSkip}>
-        <Text className="text-base text-black">Skip</Text>
+        <Text className="text-base text-black dark:text-textdark">Skip</Text>
       </TouchableOpacity>
 
       <FlatList
@@ -124,13 +124,15 @@ const Onboarding = () => {
 
       <View className="flex-row justify-between px-5 pb-6">
         <TouchableOpacity
-          className="py-3 rounded-lg justify-center items-center bg-[#F3F3F3] w-[47%] "
+          className="py-3 rounded-lg justify-center items-center bg-[#F3F3F3] dark:bg-bgnavy w-[47%] "
           onPress={handleBack}
           disabled={currentIndex === 0}
         >
           <Text
             className={`text-base font-medium ${
-              currentIndex === 0 ? 'text-[#878787]' : 'text-black'
+              currentIndex === 0
+                ? 'text-[#878787] dark:text-borderdark'
+                : 'text-black dark:text-textdark'
             }`}
           >
             Back

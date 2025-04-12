@@ -1,10 +1,18 @@
 import { Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Tabs } from 'expo-router';
 import { chatData, chatsList } from '@/app/constants/chat';
+import { Context } from '@/app/Context/context';
 
 export default function TabsLayout() {
+  const context = useContext(Context);
+
+  if (!context) {
+    throw new Error('Context must be used within a Provider');
+  }
+
+  const { darkMode } = context;
   const TabIcon = ({
     focused,
     icon,
@@ -25,7 +33,7 @@ export default function TabsLayout() {
         <View className="relative">
           <Ionicons
             name={icon}
-            color={focused ? '#12A08A' : 'black'}
+            color={focused ? '#12A08A' : darkMode ? '#FFFFFF' : 'black'}
             size={24}
           />
           {showBadge && unreadNotifications > 0 && (
@@ -36,7 +44,7 @@ export default function TabsLayout() {
         </View>
         <Text
           className={`text-[9px] mt-1 font-poppins-regular ${
-            focused ? 'text-[#12A08A]' : 'text-black'
+            focused ? 'text-[#12A08A]' : darkMode ? 'text-white' : 'text-black'
           }`}
         >
           {title}
@@ -50,9 +58,9 @@ export default function TabsLayout() {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: darkMode ? '#10141E' : '#FFFFFF',
           position: 'absolute',
-          borderTopColor: '#0061FF1A',
+          borderTopColor: darkMode ? '#5A698F' : '#0061FF1A',
           borderTopWidth: 1,
           height: 65,
           paddingTop: 15,
