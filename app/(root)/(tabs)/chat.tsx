@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -8,46 +8,48 @@ import {
   StatusBar,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { chatData, chatsList } from '@/app/constants/chat';
 import { formatTime, formatDate } from '@/app/Utils/dateUtils';
 import { router } from 'expo-router';
+import { Context, DoorbellEvent } from '@/app/Context/context';
 
 const Chat = () => {
-  const [chats, setChats] = useState<chatData[]>(chatsList);
+  const context = useContext(Context);
 
-  const todayChats = chats.filter((chat) => {
-    const today = new Date();
-    const chatDate = new Date(chat.time);
-    return (
-      chatDate.getDate() === today.getDate() &&
-      chatDate.getMonth() === today.getMonth() &&
-      chatDate.getFullYear() === today.getFullYear()
-    );
+  if (!context) {
+    throw new Error('Context must be used within a Provider');
+  }
+
+  const { doorbellEvents, markAsRead } = context;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0)
+
+  const todayEvents = doorbellEvents.filter(event => {
+    const eventDate = new Date(Number(event.timestamp) * 1000);
+    return eventDate >= today;
   });
 
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  const thisWeekChats = chats.filter((chat) => {
-    const chatDate = new Date(chat.time);
-    return chatDate > oneWeekAgo && !todayChats.includes(chat);
+  const thisWeekEvents = doorbellEvents.filter(event => {
+    const eventDate = new Date(Number(event.timestamp) * 1000);
+    return eventDate >= oneWeekAgo && eventDate < today;
   });
 
-  const earlierChats = chats.filter((chat) => {
-    const chatDate = new Date(chat.time);
-    return chatDate <= oneWeekAgo;
+  const earlierEvents = doorbellEvents.filter(event => {
+    const eventDate = new Date(Number(event.timestamp) * 1000);
+    return eventDate < oneWeekAgo;
   });
 
-  const hasNotifications =
-    todayChats.length > 0 ||
-    thisWeekChats.length > 0 ||
-    earlierChats.length > 0;
+  const hasNotifications = doorbellEvents.length > 0;
 
-  const goToChat = (chat: chatData) => {
-    router.navigate(`/pages/chatDetail?chatId=${chat.id}`);
+  const goToChat = (event: DoorbellEvent) => {
+    markAsRead(event.id);
+    router.navigate(`/pages/chatDetail?eventId=${event.id}`);
   };
 
-  const NotificationItem = ({ item }: { item: chatData }) => (
+  const NotificationItem = ({ item }: { item: DoorbellEvent }) => (
     <TouchableOpacity
       key={item.id}
       className="bg-white dark:bg-bgnavy rounded-xl shadow-sm border border-gray-100 dark:border-borderdark mb-3 overflow-hidden"
@@ -63,11 +65,12 @@ const Chat = () => {
               Gate Doorbell
             </Text>
             <Text className="text-xs text-gray-500 dark:text-textdark">
-              {formatTime(new Date(item.time))}
+               {item.timestamp && formatTime(item.timestamp)}
             </Text>
           </View>
           <Text className="text-gray-500 mt-1" numberOfLines={2}>
             {item.message}
+            {item.response && ` - Response: ${item.response}`}
           </Text>
         </View>
         {!item.read && (
@@ -76,7 +79,7 @@ const Chat = () => {
       </View>
       <View className="bg-gray-50 dark:bg-borderdark px-4 py-2">
         <Text className="text-xs font-poppins-regular text-gray-500 dark:text-textdark">
-          {formatDate(new Date(item.time))}
+          {item.timestamp && formatDate(item.timestamp)}
         </Text>
       </View>
     </TouchableOpacity>
@@ -109,34 +112,34 @@ const Chat = () => {
       <ScrollView className="flex-1">
         {hasNotifications ? (
           <View className="px-4 py-6">
-            {todayChats.length > 0 && (
+            {todayEvents.length > 0 && (
               <View className="mt-2">
                 <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
                   Today's Doorbell
                 </Text>
-                {todayChats.map((chat) => (
+                {todayEvents.map((chat) => (
                   <NotificationItem key={chat.id} item={chat} />
                 ))}
               </View>
             )}
 
-            {thisWeekChats.length > 0 && (
+            {thisWeekEvents.length > 0 && (
               <View className="mt-6">
                 <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
                   This Week's Doorbell
                 </Text>
-                {thisWeekChats.map((chat) => (
+                {thisWeekEvents.map((chat) => (
                   <NotificationItem key={chat.id} item={chat} />
                 ))}
               </View>
             )}
 
-            {earlierChats.length > 0 && (
+            {earlierEvents.length > 0 && (
               <View className="mt-6 mb-10">
                 <Text className="font-poppins-medium text-gray-800 dark:text-textdark mb-3">
                   Earlier Doorbell Activity
                 </Text>
-                {earlierChats.map((chat) => (
+                {earlierEvents.map((chat) => (
                   <NotificationItem key={chat.id} item={chat} />
                 ))}
               </View>

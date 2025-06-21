@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -9,61 +9,93 @@ import {
   Platform,
   ScrollView,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
-import { chatsList } from '@/app/constants/chat';
+import { Context } from '../Context/context';
 
 interface Message {
   id: number;
   text: string;
   sender: 'user' | 'visitor';
   timestamp: Date;
+  responseTimestamp?: Date;
 }
 
 const ChatDetail = () => {
-  const { chatId } = useLocalSearchParams<{ chatId: string }>();
-  const numericChatId = parseInt(chatId || '0', 10);
+   const { eventId } = useLocalSearchParams<{ eventId: string }>();
 
-  const chat = chatsList.find((c) => c.id === numericChatId);
+  const context = useContext(Context);
 
+  if (!context) {
+    throw new Error('Context must be used within a Provider');
+  }
+
+  const { doorbellEvents, sendResponse } = context;
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const event = doorbellEvents.find(e => e.id === eventId);
+
   useEffect(() => {
-    if (chat) {
-      setMessages([
-        {
-          id: 1,
-          text: chat.message || 'Someone rang your Gate doorbell',
-          sender: 'visitor',
-          timestamp: new Date(chat.time),
-        },
-      ]);
+    if (event) {
+      const initialMessages: Message[] = [{
+        id: 1,
+        text: 'Visitor at the door',
+        sender: 'visitor',
+        timestamp: new Date(Number(event.timestamp) * 1000),
+      }];
+
+      if (event.response) {
+        initialMessages.push({
+          id: 2,
+          text: event.response,
+          sender: 'user',
+          timestamp: new Date(event.responseTimestamp ? event.responseTimestamp : event.timestamp * 1000),
+        });
+      }
+
+      setMessages(initialMessages);
     }
-  }, [chat]);
+  }, [event]);
 
-  const handleSend = () => {
-    if (message.trim() === '') return;
 
-    const newMessage = {
-      id: messages.length + 1,
-      text: message,
-      sender: 'user' as const,
-      timestamp: new Date(),
-    };
 
-    setMessages([...messages, newMessage]);
-    setMessage('');
+  const handleSend = async () => {
+    if (message.trim() === '' || !eventId) return;
+  
+    try {
+      const responseTimestamp = Date.now();
+  
+      await sendResponse(eventId, message);
+  
+      setMessages((prevMessages) => {
+        const filtered = prevMessages.filter(msg => msg.sender !== 'user');
+  
+        const newMessage: Message = {
+          id: responseTimestamp,
+          text: message,
+          sender: 'user',
+          timestamp: new Date(responseTimestamp),
+        };
+  
+        return [...filtered, newMessage];
+      });
+  
+      setMessage('');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to send message');
+    }
   };
 
   const quickMessages = [
-    'No one around call 0780278585',
-    "I'll be right there",
-    'Please leave the package at the door',
+    'Hamagara 0780278585',
+    "Ndaje",
+    'Sindi mu rugo',
   ];
 
-  if (!chat) {
+   if (!event) {
     return (
       <SafeAreaView className="flex-1 bg-white dark:bg-bgdark justify-center items-center">
         <Text className="text-lg font-poppins-medium text-gray-800 dark:text-textdark">
@@ -94,7 +126,7 @@ const ChatDetail = () => {
 
       <View className="items-center py-2 bg-gray-50 dark:bg-borderdark">
         <Text className="text-xs font-poppins-regular text-gray-500 dark:text-textdark">
-          {new Date(chat.time).toLocaleString()}
+            {new Date(Number(event.timestamp) * 1000).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric',month: 'long', day: 'numeric',})}
         </Text>
       </View>
 
@@ -124,7 +156,7 @@ const ChatDetail = () => {
               </Text>
             </View>
             <Text className="text-xs text-gray-500 mt-1 ml-1">
-              {msg.timestamp.toLocaleTimeString([], {
+              {new Date(msg.timestamp).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit',
               })}
@@ -142,13 +174,9 @@ const ChatDetail = () => {
                 key={index}
                 className="bg-gray-50 dark:bg-bgnavy border border-gray-200 dark:border-borderdark rounded-xl p-3 mb-3"
                 onPress={() => {
-                  const newMsg = {
-                    id: messages.length + 1,
-                    text: quickMsg,
-                    sender: 'user' as const,
-                    timestamp: new Date(),
-                  };
-                  setMessages([...messages, newMsg]);
+                  setMessage(quickMsg);
+                  // auto-send the quick message
+                  // handleSend();
                 }}
               >
                 <Text className="text-gray-800 dark:text-textdark font-poppins-regular">

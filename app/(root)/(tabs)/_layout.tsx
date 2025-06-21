@@ -2,7 +2,6 @@ import { Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useContext } from 'react';
 import { Tabs } from 'expo-router';
-import { chatData, chatsList } from '@/app/constants/chat';
 import { Context } from '@/app/Context/context';
 
 export default function TabsLayout() {
@@ -12,7 +11,7 @@ export default function TabsLayout() {
     throw new Error('Context must be used within a Provider');
   }
 
-  const { darkMode } = context;
+  const { darkMode, doorbellEvents } = context;
   const TabIcon = ({
     focused,
     icon,
@@ -24,8 +23,8 @@ export default function TabsLayout() {
     title: string;
     showBadge?: boolean;
   }) => {
-    const unreadNotifications = chatsList.filter(
-      (chat: chatData) => !chat.read
+    const unreadNotifications = doorbellEvents.filter(
+      (event) => !event.read
     ).length;
 
     return (
